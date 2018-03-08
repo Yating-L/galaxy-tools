@@ -3,10 +3,11 @@ from __future__ import print_function
 
 import argparse
 import logging
+import json
 
 from webapollo import AssertUser, GuessOrg, OrgOrGuess, WAAuth, WebApolloInstance
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 if __name__ == '__main__':
@@ -23,18 +24,14 @@ if __name__ == '__main__':
 
     # Get organism
     org_cn = GuessOrg(args, wa)
-    if isinstance(org_cn, list):
+    if org_cn:
+        # TODO: Check user perms on org.
         org_cn = org_cn[0]
+        org = wa.organisms.findOrganismByCn(org_cn)
+        returnData = wa.organisms.deleteOrganism(org['id'])
+        print("Delete organism %s" % org_cn)
+        print("returnData = " + str(returnData) + "\n")
+    else:
+        logger.error("Organism %s doesn't exist" % org_cn)
 
-    # TODO: Check user perms on org.
-    org = wa.organisms.findOrganismByCn(org_cn)
 
-    # Call setSequence to tell apollo which organism we're working with
-    wa.annotations.setSequence(org['commonName'], org['id'])
-    # Then get a list of features.
-    features = wa.annotations.getFeatures()
-    # For each feature in the features
-    for feature in features['features']:
-        # We see that deleteFeatures wants a uniqueName, and so we pass
-        # is the uniquename field in the feature.
-        print(wa.annotations.deleteFeatures([feature['uniquename']]))
