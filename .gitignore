@@ -71,3 +71,4 @@ tool_test_output.json
 .idea
 .DS_Store
 *.iml
+.gitignore
