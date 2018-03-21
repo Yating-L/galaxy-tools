@@ -1239,7 +1239,7 @@ class OrganismsClient(Client):
     CLIENT_BASE = '/organism/'
 
     def addOrganism(self, commonName, directory, blatdb=None, species=None,
-                    genus=None, public=False):
+                    genus=None, public=False, metadata=None):
         data = {
             'commonName': commonName,
             'directory': directory,
@@ -1252,6 +1252,8 @@ class OrganismsClient(Client):
             data['genus'] = genus
         if species is not None:
             data['species'] = species
+        if metadata is not None:
+            data['metadata'] = metadata
 
         return self.request('addOrganism', data)
 

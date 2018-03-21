@@ -78,7 +78,9 @@ if __name__ == '__main__':
             args.jbrowse,
             genus=args.genus,
             species=args.species,
-            public=args.public
+            public=args.public,
+            # specify the creator
+            metadata={'creator': gx_user.userId}
         )
 
         # Must sleep before we're ready to handle
