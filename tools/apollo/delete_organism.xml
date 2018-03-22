@@ -59,7 +59,7 @@
   <help><![CDATA[
 **What it does**
 
-Deletes every single one of the annotations on an organism. Intentionally.
+Deletes organism from Apollo and export every single one of the annotations on the organism.
 
 **Why?**
 

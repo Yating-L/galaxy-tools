@@ -204,7 +204,7 @@ This Galaxy tool is used to manage Apollo users.The currently supported operatio
   - Create a new user
   - Delete a user
   - Add a user to a group
-  - Remove a user to a group
+  - Remove a user from a group
 
 The tool can do these operations on one student at a time. It can also do the operations on multiple students at a time by uploading a text file, which including students information.
 
