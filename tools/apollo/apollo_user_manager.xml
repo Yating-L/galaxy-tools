@@ -24,7 +24,7 @@ import sys
 
 file_path = sys.argv[1]
 
-#set global data_parameter_dict = {"operations": dict()}
+#set global data_parameter_dict = {"operations": dict(), "email": str($__user_email__)}
 ## Function to retrieve the data of the inputs
 #def prepare_json($operation_type, $data_dict, $batch)
     #silent $data_dict.update({"batch": str($batch)})

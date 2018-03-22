@@ -998,6 +998,13 @@ class GroupsClient(Client):
         }
         return self.request('updateMembership', data)
 
+    def getGroupAdmin(self, groupName):
+        data = {'name': groupName}
+        return self.request('getGroupAdmin', data)
+
+    def getGroupCreator(self, groupName):
+        data = {'name': groupName}
+        return self.request('getGroupCreator', data)
 
 class IOClient(Client):
     CLIENT_BASE = '/IOService/'
@@ -1302,6 +1309,9 @@ class OrganismsClient(Client):
 
         return self.request('updateOrganismInfo', data)
 
+    def getOrganismCreator(self, commonName):
+        data = {'organism': commonName}
+        return self.request('getOrganismCreator', data)
 
 class UsersClient(Client):
     CLIENT_BASE = '/user/'
@@ -1356,7 +1366,7 @@ class UsersClient(Client):
         data = {'group': group.name, 'userId': user.userId}
         return self.request('removeUserFromGroup', data)
 
-    def createUser(self, email, firstName, lastName, newPassword, role="user", groups=None):
+    def createUser(self, email, firstName, lastName, newPassword, role="user", groups=None, metadata=None):
         data = {
             'firstName': firstName,
             'lastName': lastName,
@@ -1365,6 +1375,7 @@ class UsersClient(Client):
             'groups': [] if groups is None else groups,
             # 'availableGroups': [],
             'newPassword': newPassword,
+            'metadata': metadata
             # 'organismPermissions': [],
         }
         return self.request('createUser', data)
@@ -1382,6 +1393,9 @@ class UsersClient(Client):
         }
         return self.request('updateUser', data)
 
+    def getUserCreator(self, email):
+        data = {'email': email}
+        return self.request('getUserCreator', data)
 
 class RemoteRecord(Client):
     CLIENT_BASE = None
