@@ -35,8 +35,6 @@ if __name__ == '__main__':
 
     # User must have an account
     gx_user = AssertUser(wa.users.loadUsers(email=args.email))
-    if gx_user.role != 'INSTRUCTOR' and gx_user.role != 'ADMIN':
-        sys.exit(gx_user.role + " is not authorized to create or update organisms")
 
     log.info("Determining if add or update required")
     try:
@@ -47,11 +45,12 @@ if __name__ == '__main__':
     if org:
         has_perms = False
         old_directory = org['directory']
+        # update the organism if the gx_user is global admin or organism administrative
         for user_owned_organism in gx_user.organismPermissions:
             if user_owned_organism['organism'] == org['commonName'] and 'ADMINISTRATE' in user_owned_organism['permissions']:
                 has_perms = True
                 break
-        if not has_perms:
+        if not has_perms and gx_user.role != 'ADMIN':
             sys.exit("Naming Conflict. You do not have permissions to access this organism. Either request permission from the owner, or choose a different name for your organism.")
 
         log.info("\tUpdating Organism")
@@ -72,6 +71,9 @@ if __name__ == '__main__':
 
     else:
         # New organism
+        # create an organism if the gx_user is global admin or instructor
+        if gx_user.role != 'INSTRUCTOR' and gx_user.role != 'ADMIN':
+            sys.exit(gx_user.role + " is not authorized to create an organisms")
         log.info("\tAdding Organism")
         data = wa.organisms.addOrganism(
             org_cn,
@@ -79,13 +81,14 @@ if __name__ == '__main__':
             genus=args.genus,
             species=args.species,
             public=args.public,
-            # specify the creator
+            # assign the gx_user as the organism creator
             metadata={'creator': gx_user.userId}
         )
 
         # Must sleep before we're ready to handle
         time.sleep(2)
         log.info("Updating permissions for %s on %s", gx_user, org_cn)
+        # assign the gx_user organism administrative privilege
         wa.users.updateOrganismPermission(
             gx_user, org_cn,
             administrate=True,
