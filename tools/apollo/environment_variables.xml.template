@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<macros>
+    <xml name="environment_variables">
+        <environment_variables>
+            <environment_variable name="GALAXY_WEBAPOLLO_URL">APOLLO_URL</environment_variable>
+            <environment_variable name="GALAXY_WEBAPOLLO_USER">APOLLO_ADMIN_ACCOUNT</environment_variable>
+            <environment_variable name="GALAXY_WEBAPOLLO_PASSWORD">APOLLO_ADMIN_PASSWORD</environment_variable>
+            <environment_variable name="GALAXY_WEBAPOLLO_EXT_URL=">APOLLO_URL</environment_variable>
+            <environment_variable name="GALAXY_SHARED_DIR">GALAXY_SHARED_DIRECTORY</environment_variable>
+        </environment_variables>
+    </xml>
+</macros>
+
