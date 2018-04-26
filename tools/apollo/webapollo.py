@@ -1542,6 +1542,15 @@ def accessible_organisms(user, orgs):
         if org['commonName'] in permissionMap
     ]
 
+def accessible_groups(wa, user, groups):
+    filtered_group = []
+    for group in groups:
+        group_admins = wa.groups.getGroupAdmin(group.name)
+        group_creator = wa.groups.getGroupCreator(group.name)
+        if group_creator and group_creator['creator'] == str(user.userId) or (group_admins and user.username in [x['username'] for x in group_admins]):
+            filtered_group.append(group)
+    return filtered_group
+
 
 def galaxy_list_groups(trans, *args, **kwargs):
     email = trans.get_user().email
@@ -1584,7 +1593,9 @@ def galaxy_list_groups(trans, *args, **kwargs):
 def _galaxy_list_groups(wa, gx_user, *args, **kwargs):
     # Fetch the groups.
     group_data = []
-    for group in wa.groups.loadGroups():
+    all_groups = wa.groups.loadGroups()
+    filtered_group = accessible_groups(wa, gx_user, all_groups)
+    for group in filtered_group:
         # Reformat
         group_data.append((group.name, group.name, False))
     return group_data
