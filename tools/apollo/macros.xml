@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <macros>
-  <import>environment_variables.xml</import>
   <xml name="requirements">
     <requirements>
       <requirement type="package" version="2.7">python</requirement>
@@ -10,9 +9,7 @@
       <requirement type="package" version="0.16.0">future</requirement>
       <yield/>
     </requirements>
-    <expand macro="environment_variables" />
   </xml>
-
   <token name="@DATA_DIR@">\$GALAXY_SHARED_DIR</token>
   <token name="@EXT_URL@">
 "\$GALAXY_WEBAPOLLO_EXT_URL"
