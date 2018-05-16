@@ -39,8 +39,11 @@ def createApolloUser(user, out, gx_user):
             if u.username == user['useremail']]
 
     if len(apollo_user) == 1:
-        # Update name, regen password if the user ran it again
         userObj = apollo_user[0]
+        # check if gx_user is admin or creator of the apollo_user
+        creatorData = wa.users.getUserCreator(userObj.username)
+        if gx_user.role != 'ADMIN' and creatorData['creator'] != str(gx_user.userId):
+            sys.exit(gx_user.username + " is not authorized to update user: " + userObj.username)
         returnData = wa.users.updateUser(userObj, user['useremail'], user['firstname'], user['lastname'], password)
         out.writerow({'Operation':'Update User', 'First Name': user['firstname'], 'Last Name': user['lastname'],
                        'Email': user['useremail'], 'New Password': password})
@@ -240,6 +243,7 @@ if __name__ == '__main__':
     for operation, users_list in operations_dictionary.items():
         if operation == "create":
             # proceed if the gx_user is global admin or instructor
+            # if the apollo_user exists, check if gx_user is admin or creator of the apollo_user before updating the user
             createApolloUsers(users_list, csvWriter, gx_user)
         elif operation == "delete":
             # proceed if the gx_user is global admin, or user's creator
