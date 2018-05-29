@@ -219,12 +219,12 @@ The text file can be either CSV (comma-delimited) or Tabular (tab-delimited). It
 Text file for creating multiple users:
 
 .. csv-table::
-   :header: "useremail", "firstname", "lastname"
-   :widths: 20, 10, 10
+   :header: "useremail", "firstname", "lastname", "role"
+   :widths: 20, 10, 10, 10
 
-   "test1@demo.com", "test1", "demo"
-   "test2@demo.com", "test2", "demo"
-   "test3@demo.com", "test3", "demo"
+   "test1@demo.com", "test1", "demo", "user"
+   "test2@demo.com", "test2", "demo", "user"
+   "test3@demo.com", "test3", "demo", "user"
 
 
 Text file for deleting multiple users:
