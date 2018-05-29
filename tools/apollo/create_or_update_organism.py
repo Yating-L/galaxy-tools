@@ -97,10 +97,10 @@ if __name__ == '__main__':
             read=True,
         )
 
-        # Group access
-        if args.group:
-            group = wa.groups.loadGroupByName(name=args.group)
-            res = wa.groups.updateOrganismPermission(group, org_cn,
+    # Group access
+    if args.group:
+        group = wa.groups.loadGroupByName(name=args.group)
+        res = wa.groups.updateOrganismPermission(group, org_cn,
                                                      administrate=False, write=True, read=True,
                                                      export=True)
 
