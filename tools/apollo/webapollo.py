@@ -1543,6 +1543,8 @@ def accessible_organisms(user, orgs):
     ]
 
 def accessible_groups(wa, user, groups):
+    if user.role == 'ADMIN':
+        return groups
     filtered_group = []
     for group in groups:
         group_admins = wa.groups.getGroupAdmin(group.name)
