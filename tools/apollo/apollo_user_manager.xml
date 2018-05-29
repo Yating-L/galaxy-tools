@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<tool id="apollo_user_manager" name="Apollo User Manager" version="3.1">
+<tool id="apollo_user_manager" name="Apollo User Manager" version="3.2">
     <description>for managing Apollo users</description>
     <macros>
         <import>macros.xml</import>
     </macros>
     <expand macro="requirements"/>
+    <code file="webapollo.py"/>
     <command detect_errors="aggressive"><![CDATA[
 
 ## Dump the tool parameters into a JSON file
@@ -43,7 +44,9 @@ file_path = sys.argv[1]
         #if $batch == "false"
             #set data_dict = {"useremail": str($f.operation_type_selector.batch_selector.user_email),
             "firstname": str($f.operation_type_selector.batch_selector.firstname),
-            "lastname": str($f.operation_type_selector.batch_selector.lastname)}
+            "lastname": str($f.operation_type_selector.batch_selector.lastname),
+            "role": str($f.operation_type_selector.batch_selector.role),
+            "group": str($f.operation_type_selector.batch_selector.group)}
 
         #else
             #set data_dict = {"format": str($f.operation_type_selector.batch_selector.format),
@@ -114,6 +117,12 @@ with open(file_path, 'w') as f:
                             </param>
                             <param name="firstname" type="text" label="First name" />
                             <param name="lastname" type="text" label="Last name" />
+                            <param name="role" type="select" label="Role">
+                                <option value="user" selected="true">user</option>
+                                <option value="instructor" selected="true">instructor (only a system administrative can create an instructor account)</option>
+                                <option value="admin" selected="true">admin (only a system administrative can create an admin account)</option>
+                            </param>
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Add the user to the group" optional="True" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />

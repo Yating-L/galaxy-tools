@@ -49,8 +49,18 @@ def createApolloUser(user, out, gx_user):
                        'Email': user['useremail'], 'New Password': password})
         print("Update user %s" % user['useremail'])
     else:
+        groups = []
+        if user['group'] != 'None':
+            apollo_groups = wa.groups.loadGroups()
+            group = [g for g in apollo_groups if g.name == user['group']]
+            if not group:
+                logger.error("the group %s doesn't exist", user['group'])
+                exit(1)
+            groups.append(user['group'])
+        if user['role'] != 'user' and gx_user.role != 'ADMIN':
+            sys.exit(gx_user.username + " is not authorized to create an " + user['role'] + " account. Only Apollo system administrative can create an instructor and admin account.")
         returnData = wa.users.createUser(user['useremail'], user['firstname'], user['lastname'],
-                                         password, role='user', metadata={'creator': gx_user.userId})
+                                         password, role=user['role'], groups=groups, metadata={'creator': gx_user.userId})
         out.writerow({'Operation':'Create User', 'First Name': user['firstname'], 'Last Name': user['lastname'],
                       'Email': user['useremail'], 'New Password': password})
         print("Create user %s" % user['useremail'])
