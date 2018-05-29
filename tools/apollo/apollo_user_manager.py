@@ -40,30 +40,25 @@ def createApolloUser(user, out, gx_user):
 
     if len(apollo_user) == 1:
         userObj = apollo_user[0]
+        original_role = wa.users.loadUser(userObj).role.lower()
         # check if gx_user is admin or creator of the apollo_user
         creatorData = wa.users.getUserCreator(userObj.username)
         if gx_user.role != 'ADMIN' and creatorData['creator'] != str(gx_user.userId):
             sys.exit(gx_user.username + " is not authorized to update user: " + userObj.username)
-        returnData = wa.users.updateUser(userObj, user['useremail'], user['firstname'], user['lastname'], password)
+        returnData = wa.users.updateUser(userObj, user['useremail'], user['firstname'], user['lastname'], password, role=user['role'])
         out.writerow({'Operation':'Update User', 'First Name': user['firstname'], 'Last Name': user['lastname'],
-                       'Email': user['useremail'], 'New Password': password})
+                       'Email': user['useremail'], 'New Password': password, 'Role': user['role']})
         print("Update user %s" % user['useremail'])
+        if user['role'] != original_role:
+            print("Change the role from %s to %s" % (original_role, user['role']))
     else:
-        groups = []
-        if user['group'] != 'None':
-            apollo_groups = wa.groups.loadGroups()
-            group = [g for g in apollo_groups if g.name == user['group']]
-            if not group:
-                logger.error("the group %s doesn't exist", user['group'])
-                exit(1)
-            groups.append(user['group'])
         if user['role'] != 'user' and gx_user.role != 'ADMIN':
             sys.exit(gx_user.username + " is not authorized to create an " + user['role'] + " account. Only Apollo system administrative can create an instructor and admin account.")
         returnData = wa.users.createUser(user['useremail'], user['firstname'], user['lastname'],
-                                         password, role=user['role'], groups=groups, metadata={'creator': gx_user.userId})
+                                         password, role=user['role'], metadata={'creator': gx_user.userId})
         out.writerow({'Operation':'Create User', 'First Name': user['firstname'], 'Last Name': user['lastname'],
-                      'Email': user['useremail'], 'New Password': password})
-        print("Create user %s" % user['useremail'])
+                      'Email': user['useremail'], 'New Password': password, 'Role': user['role']})
+        print("Create an %s account %s" % (user['role'], user['useremail']))
     print("Return data: " + str(returnData) + "\n")
 
 
@@ -243,7 +238,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     jsonData = loadJson(args.data_json)
     outputFile = open(args.output, 'a')
-    fieldnames = ['Operation', 'First Name', 'Last Name', 'Email', 'New Password', 'Add to Group', 'Remove from Group']
+    fieldnames = ['Operation', 'First Name', 'Last Name', 'Email', 'New Password', 'Role', 'Add to Group', 'Remove from Group']
     csvWriter = csv.DictWriter(outputFile, fieldnames=fieldnames)
     csvWriter.writeheader()
     operations_dictionary = jsonData.get("operations")

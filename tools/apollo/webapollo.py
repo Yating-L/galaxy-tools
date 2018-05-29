@@ -1383,13 +1383,14 @@ class UsersClient(Client):
     def deleteUser(self, user):
         return self.request('deleteUser', {'userId': user.userId})
 
-    def updateUser(self, user, email, firstName, lastName, newPassword):
+    def updateUser(self, user, email, firstName, lastName, newPassword, role=None):
         data = {
             'userId': user.userId,
             'email': email,
             'firstName': firstName,
             'lastName': lastName,
             'newPassword': newPassword,
+            'role': role
         }
         return self.request('updateUser', data)
 
