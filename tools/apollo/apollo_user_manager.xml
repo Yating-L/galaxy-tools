@@ -113,7 +113,7 @@ with open(file_path, 'w') as f:
     <inputs>
         <repeat name="operation" title="New operation">
             <conditional name="operation_type_selector" >
-                <param name="operation_type" type="select" label="Create a user, delete a user, add a user to a group or remove a user from a group">
+                <param name="operation_type" type="select" label="Create a user, delete a user, create a user group, delete a user group, add a user to a group or remove a user from a group">
                     <option value="create">Create a user</option>
                     <option value="delete">Delete a users</option>
                     <option value="create_group">Create a user group</option>
@@ -279,7 +279,6 @@ Text file for creating multiple users/groups:
    "test2@demo.com", "test2", "demo", "user"
    "test3@demo.com", "test3", "demo", "user"
 
-
 Text file for deleting multiple users:
 
 .. csv-table::
@@ -290,6 +289,7 @@ Text file for deleting multiple users:
     "test2@demo.com"
     "test3@demo.com"
 
+
 Text file for creating multiple user groups:
 
 .. csv-table::
@@ -299,6 +299,7 @@ Text file for creating multiple user groups:
     "annotation_group_1"
     "annotation_group_2"
     "annotation_group_3"
+
 
 Text file for deleting multiple user groups:
 
