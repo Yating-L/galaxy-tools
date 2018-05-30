@@ -924,8 +924,8 @@ class AnnotationsClient(Client):
 class GroupsClient(Client):
     CLIENT_BASE = '/group/'
 
-    def createGroup(self, name):
-        data = {'name': name}
+    def createGroup(self, name, metadata=None):
+        data = {'name': name, 'metadata': metadata}
         return self.request('createGroup', data)
 
     def getOrganismPermissionsForGroup(self, group):
@@ -1549,8 +1549,7 @@ def accessible_groups(wa, user, groups):
     filtered_group = []
     for group in groups:
         group_admins = wa.groups.getGroupAdmin(group.name)
-        group_creator = wa.groups.getGroupCreator(group.name)
-        if group_creator and group_creator['creator'] == str(user.userId) or (group_admins and user.username in [x['username'] for x in group_admins]):
+        if group_admins and user.username in [x['username'] for x in group_admins]:
             filtered_group.append(group)
     return filtered_group
 
