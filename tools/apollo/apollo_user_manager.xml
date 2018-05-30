@@ -86,7 +86,7 @@ file_path = sys.argv[1]
         #set batch = $f.operation_type_selector.batch_selector.batch
         #if $batch == "false"
             #set data_dict = {"useremail": str($f.operation_type_selector.batch_selector.user_email),
-            "group": str($f.operation_type_selector.batch_selector.group_name)}
+            "group": str($f.operation_type_selector.batch_selector.group)}
         #else
             #set data_dict = {"format": str($f.operation_type_selector.batch_selector.format),
             "false_path": str($f.operation_type_selector.batch_selector.user_info_file)}
@@ -97,7 +97,7 @@ file_path = sys.argv[1]
         #set batch = $f.operation_type_selector.batch_selector.batch
         #if $batch == "false"
             #set data_dict = {"useremail": str($f.operation_type_selector.batch_selector.user_email),
-            "group": str($f.operation_type_selector.batch_selector.group_name)}
+            "group": str($f.operation_type_selector.batch_selector.group)}
         #else
             #set data_dict = {"format": str($f.operation_type_selector.batch_selector.format),
             "false_path": str($f.operation_type_selector.batch_selector.user_info_file)}
@@ -211,7 +211,7 @@ with open(file_path, 'w') as f:
                                     </valid>
                                 </sanitizer>
                             </param>
-                            <param type="text" name="group_name" size="30" value="unknown" label="Group name" />
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" optional="True" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />
@@ -232,7 +232,7 @@ with open(file_path, 'w') as f:
                                     </valid>
                                 </sanitizer>
                             </param>
-                            <param type="text" name="group_name" size="30" value="unknown" label="Group name" />
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" optional="True" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />
