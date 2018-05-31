@@ -59,7 +59,7 @@
   <help><![CDATA[
 **What it does**
 
-Deletes organism from Apollo and export every single one of the annotations on the organism.
+Deletes organism from Apollo and export every single one of the annotations on the organism (`README <https://github.com/goeckslab/galaxy-tools/blob/gonramp/tools/apollo/README.rst>`_).
 
 **Why?**
 

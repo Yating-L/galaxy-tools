@@ -115,9 +115,9 @@ with open(file_path, 'w') as f:
             <conditional name="operation_type_selector" >
                 <param name="operation_type" type="select" label="Create a user, delete a user, create a user group, delete a user group, add a user to a group or remove a user from a group">
                     <option value="create">Create a user</option>
-                    <option value="delete">Delete a users</option>
+                    <option value="delete">Delete a user</option>
                     <option value="create_group">Create a user group</option>
-                    <option value="delete_group">Delete a users group</option>
+                    <option value="delete_group">Delete a user group</option>
                     <option value="add">Add a user to a group</option>
                     <option value="remove">Remove a user from a group</option>
                 </param>
@@ -256,7 +256,7 @@ with open(file_path, 'w') as f:
     <help><![CDATA[
 **What it does**
 
-This Galaxy tool is used to manage Apollo users.The currently supported operation including:
+This Galaxy tool is used to manage Apollo users (`README <https://github.com/goeckslab/galaxy-tools/blob/gonramp/tools/apollo/README.rst>`_).The currently supported operation including:
 
   - Create a new user
   - Delete a user
