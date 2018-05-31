@@ -139,8 +139,8 @@ with open(file_path, 'w') as f:
                             <param name="lastname" type="text" label="Last name" />
                             <param name="role" type="select" label="Role">
                                 <option value="user" selected="true">user</option>
-                                <option value="instructor" selected="true">instructor (only a system administrative can create an instructor account)</option>
-                                <option value="admin" selected="true">admin (only a system administrative can create an admin account)</option>
+                                <option value="instructor" selected="true">instructor (only a system administrator can create an instructor account)</option>
+                                <option value="admin" selected="true">admin (only a system administrator can create an admin account)</option>
                             </param>
                         </when>
                         <when value="true">
