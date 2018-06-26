@@ -10,6 +10,7 @@ import logging
 import codecs
 import csv
 from builtins import range, str
+from codecs import BOM_UTF8
 
 from webapollo import WAAuth, WebApolloInstance, AssertUser
 logging.basicConfig(level=logging.INFO)
@@ -249,7 +250,10 @@ def parseUserInfoFile(file_format, filename):
         sys.exit("The " + file_format + " format is not supported!")
     with open(filename, 'r') as f:
         lines = f.readlines()
-    headers = lines[0].split(delimiter)
+    headers = lines[0]
+    if headers.startswith(BOM_UTF8):
+        headers = headers.replace(BOM_UTF8, "")
+    headers = headers.split(delimiter)
     users = []
     lines = lines[1:]
     for l in lines:
