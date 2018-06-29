@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # User must have an account
     gx_user = AssertUser(wa.users.loadUsers(email=args.email))
 
-    log.info("Determining if add or update required")
+    log.info("\tDetermining if add or update required")
     try:
         org = wa.organisms.findOrganismByCn(org_cn)
     except Exception:
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         if not has_perms and gx_user.role != 'ADMIN':
             sys.exit("Naming Conflict. You do not have permissions to access this organism. Either request permission from the owner, or choose a different name for your organism.")
 
-        log.info("\tUpdating Organism")
+        log.info("\tUpdating Organism %s", org_cn)
         data = wa.organisms.updateOrganismInfo(
             org['id'],
             org_cn,
@@ -74,7 +74,7 @@ if __name__ == '__main__':
         # create an organism if the gx_user is global admin or instructor
         if gx_user.role != 'INSTRUCTOR' and gx_user.role != 'ADMIN':
             sys.exit(gx_user.role + " is not authorized to create an organisms")
-        log.info("\tAdding Organism")
+        log.info("\tAdding Organism %s", org_cn)
         data = wa.organisms.addOrganism(
             org_cn,
             args.jbrowse,
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
         # Must sleep before we're ready to handle
         time.sleep(2)
-        log.info("Updating permissions for %s on %s", gx_user, org_cn)
+        log.info("\tUpdating organism %s permissions for user %s", org_cn, gx_user)
         # assign the gx_user organism administrative privilege
         wa.users.updateOrganismPermission(
             gx_user, org_cn,
@@ -99,8 +99,8 @@ if __name__ == '__main__':
 
     # Group access
     if args.group:
-        group = wa.groups.loadGroupByName(name=args.group)
-        res = wa.groups.updateOrganismPermission(group, org_cn,
+        log.info("\tUpdating organism %s permission for group %s", org_cn, args.group)
+        res = wa.groups.updateOrganismPermission(args.group, org_cn,
                                                      administrate=False, write=True, read=True,
                                                      export=True)
 

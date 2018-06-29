@@ -978,11 +978,11 @@ class GroupsClient(Client):
         }
         return self.request('updateGroup', data)
 
-    def updateOrganismPermission(self, group, organismName,
+    def updateOrganismPermission(self, groupName, organismName,
                                  administrate=False, write=False, read=False,
                                  export=False):
         data = {
-            'groupId': group.groupId,
+            'name': groupName,
             'organism': organismName,
             'ADMINISTRATE': administrate,
             'WRITE': write,
