@@ -248,22 +248,17 @@ def parseUserInfoFile(file_format, filename):
         delimiter = ','
     else:
         sys.exit("The " + file_format + " format is not supported!")
-    with open(filename, 'r') as f:
-        lines = f.readlines()
-    headers = lines[0]
-    if headers.startswith(BOM_UTF8):
-        headers = headers.replace(BOM_UTF8, "")
-    headers = headers.split(delimiter)
+    csv.register_dialect('mycsv', delimiter=delimiter)
     users = []
-    lines = lines[1:]
-    for l in lines:
-        l = l.split(delimiter)
-        info = dict()
-        fields = len(l)
-        for i in range(fields):
-            title = headers[i].strip()
-            info[title] = l[i].strip()
-        users.append(info)
+    with open(filename, 'r') as f:
+        reader = csv.DictReader(f, dialect='mycsv')
+        # remove BOM string
+        if reader.fieldnames:
+            if reader.fieldnames[0].startswith(BOM_UTF8):
+                reader.fieldnames[0] = reader.fieldnames[0].replace(BOM_UTF8, "")
+        for row in reader:
+            info = {k.strip(): v.strip() for k, v in row.items()}
+            users.append(info)
     return users
 
 def loadJson(jsonFile):
