@@ -44,7 +44,7 @@ def createApolloUser(user, out, gx_user):
         original_role = wa.users.loadUser(userObj).role.lower()
         # check if gx_user is admin or creator of the apollo_user
         creatorData = wa.users.getUserCreator(userObj.username)
-        if gx_user.role != 'ADMIN' and creatorData['creator'] != str(gx_user.userId):
+        if gx_user.role != 'ADMIN' and str(creatorData['creator']) != str(gx_user.userId):
             sys.exit(gx_user.username + " is not authorized to update user: " + userObj.username)
         returnData = wa.users.updateUser(userObj, user['useremail'], user['firstname'], user['lastname'], password, role=user['role'])
         out.writerow({'Operation':'Update User', 'First Name': user['firstname'], 'Last Name': user['lastname'],
@@ -88,7 +88,7 @@ def deleteApolloUser(user, out, gx_user):
         userObj = apollo_user[0]
         # check if gx_user is admin or creator of the apollo_user
         creatorData = wa.users.getUserCreator(userObj.username)
-        if gx_user.role != 'ADMIN' and creatorData['creator'] != str(gx_user.userId):
+        if gx_user.role != 'ADMIN' and str(creatorData['creator']) != str(gx_user.userId):
             sys.exit(gx_user.username + " is not authorized to delete user: " + userObj.username)
         returnData = wa.users.deleteUser(userObj)
         out.writerow({'Operation':'Delete User', 'First Name': userObj.firstName, 'Last Name': userObj.lastName,
