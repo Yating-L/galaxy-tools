@@ -12,6 +12,10 @@ from webapollo import AssertUser, GuessOrg, OrgOrGuess, WAAuth, WebApolloInstanc
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
+def checkPermission(permission):
+    if permission in group["permissions"]:
+        return True
+    return False
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Create or update an organism in an Apollo instance')
@@ -98,11 +102,15 @@ if __name__ == '__main__':
         )
 
     # Group access
-    if args.group:
-        log.info("\tUpdating organism %s permission for group %s", org_cn, args.group)
-        res = wa.groups.updateOrganismPermission(args.group, org_cn,
-                                                     administrate=False, write=True, read=True,
-                                                     export=True)
+    groups = json.loads(args.group)
+    for group in groups:
+        if group["group"] != "None":
+            log.info("\tUpdating organism %s permission for group %s", org_cn, group["group"])
+            res = wa.groups.updateOrganismPermission(group["group"], org_cn,
+                                                     administrate=checkPermission("admin"),
+                                                     write=checkPermission("write"),
+                                                     read=checkPermission("read"),
+                                                     export=checkPermission("export"))
 
     try:
         data = [o for o in data if o['commonName'] == org_cn]

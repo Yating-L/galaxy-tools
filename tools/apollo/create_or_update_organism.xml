@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tool id="create_or_update" name="Create or Update Organism" version="4.2">
+<tool id="create_or_update" name="Create or Update Organism" version="4.3">
   <description>will create the organism if it doesn't exist, and update otherwise</description>
   <macros>
     <import>macros.xml</import>
@@ -8,6 +8,7 @@
   <code file="webapollo.py"/>
   <command detect_errors="aggressive"><![CDATA[
 #import os
+#import json
 
 #def getJBrowseHub($dir)
     #for $root, $dirs, $files in $os.walk($dir)
@@ -18,25 +19,34 @@
         #end for
     #end for
 #end def
+
+#def getGroupPermissions($operation)
+    #set group_array = []
+    #for $i, $f in enumerate($operation)
+        #set data_dict = {"group": str($f.group), "permissions": str($f.permissions)}
+        #silent $group_array.append($data_dict)
+    #end for
+    #return $group_array
+#end def
+
 #set jbrowse_hub_dir = $getJBrowseHub(str($jbrowse.extra_files_path))
 
 #if not $jbrowse_hub_dir
 echo "Track file doesn't exist in ${jbrowse.extra_files_path}, please specify the correct JBrowse HTML Output" >&2
 &&
 exit 1
-
 #else
 cp -R $jbrowse_hub_dir "@DATA_DIR@/${jbrowse.id}"
 &&
+#set group_permissions = $getGroupPermissions($grant_permission)
+#set group_permissions_string = json.dumps($group_permissions)
 python $__tool_directory__/create_or_update_organism.py
 
 @ADMIN_AUTH@
 
 --genus '$genus'
 --species '$species'
-#if str($group) != "None":
---group '${group}'
-#end if
+--group '$group_permissions_string'
 ${remove_old_directory}
 $public
 
@@ -56,7 +66,15 @@ $__user_email__
     <param name="genus" type="text" label="Genus" optional="False" />
     <param name="species" type="text" label="Species" optional="True" />
     <param name="public" type="boolean" truevalue="--public" falsevalue="" label="Is Organism Public" />
-    <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Grant access to a user group" optional="True" />
+    <repeat name="grant_permission" title="Group" label="Grant permission to a user group">
+        <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Grant access to a user group" optional="True" />
+        <param name="permissions" type="select" label="Permissions to the organism" multiple="true" display="checkboxes">
+            <option value="admin">Administrative</option>
+            <option value="write">Write</option>
+            <option value="read">Read</option>
+            <option value="export">Export</option>
+        </param>
+    </repeat>
     <param name="remove_old_directory" type="boolean" truevalue="--remove_old_directory" falsevalue="" label="Remove old data directory" />
   </inputs>
   <outputs>
