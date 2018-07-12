@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tool id="delete_organism" name="Delete an Apollo record" version="2.0" profile="16.04">
+<tool id="delete_organism" name="Delete an Apollo record" version="2.1" profile="16.04">
   <description></description>
   <macros>
     <import>macros.xml</import>
@@ -9,21 +9,15 @@
   <command detect_errors="aggressive"><![CDATA[
 #if str($ask_one) == "yes":
     #if str($ask_two) == "yes":
-        ## Nope, still don't trust them to not be dumb (or malicious), so we backup first.
-        python $__tool_directory__/export.py
+        ## Now we delete
+        python $__tool_directory__/delete_organism.py
         @ADMIN_AUTH@
         @ORG_OR_GUESS@
         --gff "$gff_out"
         --fasta "$fasta_out"
         --json "$json_out"
-
-        &&
-
-        ## Now we delete
-        python $__tool_directory__/delete_organism.py
-        @ADMIN_AUTH@
-        @ORG_OR_GUESS@
         "$__user_email__"
+        ${remove_old_directory}
         > $output;
     #else
         echo "Nothing to do" > $output;
@@ -36,6 +30,7 @@
     <expand macro="org_or_guess" />
     <param name="ask_one" type="boolean" truevalue="yes" falsevalue="" label="Are you SURE you want to do this?" help="It will PERMANENTLY delete all of the features on this organism."/>
     <param name="ask_two" type="boolean" truevalue="yes" falsevalue="" label="Are you really, really SURE you want to do this?" help="There's NO coming back from this."/>
+    <param name="remove_old_directory" type="boolean" truevalue="--remove_old_directory" falsevalue="" label="Remove old data directory" />
   </inputs>
   <outputs>
     <data format="tabular" name="output" label="Process and Error Log"/>

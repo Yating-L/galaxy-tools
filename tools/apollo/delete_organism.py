@@ -4,9 +4,12 @@ from __future__ import print_function
 import argparse
 import logging
 import sys
+import shutil
+import json
+import os
 
-
-from webapollo import AssertUser, GuessOrg, OrgOrGuess, WAAuth, WebApolloInstance
+from webapollo import AssertUser, CnOrGuess, GuessCn, GuessOrg, OrgOrGuess, WAAuth, WebApolloInstance
+from export import export
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -14,7 +17,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sample script to completely delete an organism')
     WAAuth(parser)
     parser.add_argument('email', help='User Email')
-    OrgOrGuess(parser)
+    CnOrGuess(parser)
+    parser.add_argument('--gff', type=argparse.FileType('w'))
+    parser.add_argument('--fasta', type=argparse.FileType('w'))
+    parser.add_argument('--json', type=argparse.FileType('w'))
+    parser.add_argument('--remove_old_directory', action='store_true', help='Remove old directory')
 
     args = parser.parse_args()
 
@@ -41,7 +48,26 @@ if __name__ == '__main__':
     if not has_perms and gx_user.role != 'ADMIN':
         sys.exit(gx_user.username + " is not authorized to delete this organism. You need to request administrative permission for this organism from the owner.")
 
+    old_directory = org['directory']
+
+    # Export annotation GFF file, genome FASTA file, and organism JSON file
+    # First check if the data directory exist, if exist do export
+    if os.path.exists(old_directory):
+        org_cn_list, seqs = GuessCn(args, wa)
+        org_data = []
+        for org_cn in org_cn_list:
+            indiv_org_data = export(org_cn, seqs)
+            org_data.append(indiv_org_data)
+        args.json.write(json.dumps(org_data, indent=2))
+        print("\tExport annotation, genome, and organism data as backup")
+        # If user wants to delete data directory, do so
+        if args.remove_old_directory:
+            shutil.rmtree(old_directory)
+            print("\tRemoved old data directory")
+    else:
+        print("\tData directory doesn't exist. Skip exporting.")
+    # Delete organims from the database
     returnData = wa.organisms.deleteOrganism(org['id'])
-    print("Delete organism %s" % org_cn)
-    print("returnData = " + str(returnData) + "\n")
+    print("\tDeleted organism %s" % org_cn)
+
 
