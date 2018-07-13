@@ -20,7 +20,7 @@ except ImportError:
     import io
 
 
-def export(org_cn, seqs):
+def export(wa, org_cn, seqs, gff=False, fasta=False):
     org_data = wa.organisms.findOrganismByCn(org_cn)
 
     data = io.StringIO()
@@ -58,11 +58,11 @@ def export(org_cn, seqs):
         for record in records:
             record.annotations = {}
             record.features = sorted(record.features, key=lambda x: x.location.start)
-            if args.gff:
-                GFF.write([record], args.gff)
+            if gff:
+                GFF.write([record], gff)
             record.description = ""
-            if args.fasta:
-                SeqIO.write([record], args.fasta, 'fasta')
+            if fasta:
+                SeqIO.write([record], fasta, 'fasta')
 
     return org_data
 
@@ -83,6 +83,6 @@ if __name__ == '__main__':
 
     org_data = []
     for org_cn in org_cn_list:
-        indiv_org_data = export(org_cn, seqs)
+        indiv_org_data = export(wa, org_cn, seqs, gff=args.gff, fasta=args.fasta)
         org_data.append(indiv_org_data)
     args.json.write(json.dumps(org_data, indent=2))

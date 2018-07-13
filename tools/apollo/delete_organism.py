@@ -55,11 +55,17 @@ if __name__ == '__main__':
     if os.path.exists(old_directory):
         org_cn_list, seqs = GuessCn(args, wa)
         org_data = []
+        if args.gff:
+            print("\tExport annotation data")
+        if args.fasta:
+            print("\tExport genome sequences")
         for org_cn in org_cn_list:
-            indiv_org_data = export(org_cn, seqs)
+            indiv_org_data = export(wa, org_cn, seqs, gff=args.gff, fasta=args.fasta)
             org_data.append(indiv_org_data)
-        args.json.write(json.dumps(org_data, indent=2))
-        print("\tExport annotation, genome, and organism data as backup")
+        if args.json:
+            args.json.write(json.dumps(org_data, indent=2))
+            print("\tExport organism data")
+
         # If user wants to delete data directory, do so
         if args.remove_old_directory:
             shutil.rmtree(old_directory)
