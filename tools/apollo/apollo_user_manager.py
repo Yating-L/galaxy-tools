@@ -33,7 +33,11 @@ def cleanInput(dict):
 
 def createApolloUser(user, out, gx_user):
     user = cleanInput(user)
-    password = pwgen(12)
+    # If default initial password is specified, use it as the password for the new account. Otherwise, randomly generate a password
+    if not user.get('password'):
+        password = pwgen(12)
+    else:
+        password = user.get('password').strip()
     time.sleep(1)
     users = wa.users.loadUsers()
     apollo_user = [u for u in users
@@ -78,6 +82,8 @@ def createApolloUsers(users_list, out, gx_user):
                     sys.exit("Cannot find firstname in the text file, make sure you use the correct header, see README file for examples.")
                 if not 'lastname' in u:
                     sys.exit("Cannot find lastname in the text file, make sure you use the correct header, see README file for examples.")
+                if user.get('password'):
+                    u['password'] = user['password']
                 createApolloUser(u, out, gx_user)
 
 

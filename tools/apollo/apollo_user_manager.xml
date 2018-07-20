@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tool id="apollo_user_manager" name="Apollo User Manager" version="4.2">
+<tool id="apollo_user_manager" name="Apollo User Manager" version="4.3">
     <description>for managing Apollo users</description>
     <macros>
         <import>macros.xml</import>
@@ -49,6 +49,9 @@ file_path = sys.argv[1]
         #else
             #set data_dict = {"format": str($f.operation_type_selector.batch_selector.format),
             "false_path": str($f.operation_type_selector.batch_selector.user_info_file)}
+        #end if
+        #if $f.operation_type_selector.password.set_password == "default"
+            #silent $data_dict.update({"password": str($f.operation_type_selector.password.initial_password)})
         #end if
         #silent $prepare_json("create", $data_dict, $batch)
 
@@ -146,6 +149,16 @@ with open(file_path, 'w') as f:
                         <when value="true">
                             <expand macro="upload_text_file" />
                         </when>
+                    </conditional>
+                    <conditional name="password">
+                        <param name="set_password" type="select" label="How do you want to set initial passwords for new users accounts">
+                            <option value="random" selected="true">Randomly generate a new password for each new user account</option>
+                            <option value="default">Set an initial password for all new user accounts</option>
+                        </param>
+                        <when value="default">
+                            <param name="initial_password" type="text" label="Initial password" />
+                        </when>
+                        <when value="random"></when>
                     </conditional>
                 </when>
                 <when value="delete">
