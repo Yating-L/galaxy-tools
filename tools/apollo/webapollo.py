@@ -1567,29 +1567,8 @@ def galaxy_list_groups(trans, *args, **kwargs):
     except UnknownUserException:
         return []
 
-    # Key for cached data
-    cacheKey = 'groups-' + email
-    # We don't want to trust "if key in cache" because between asking and fetch
-    # it might through key error.
-    if cacheKey not in cache:
-        # However if it ISN'T there, we know we're safe to fetch + put in
-        # there.
-        data = _galaxy_list_groups(wa, gx_user, *args, **kwargs)
-        cache[cacheKey] = data
-        return data
-    try:
-        # The cache key may or may not be in the cache at this point, it
-        # /likely/ is. However we take no chances that it wasn't evicted between
-        # when we checked above and now, so we reference the object from the
-        # cache in preparation to return.
-        data = cache[cacheKey]
-        return data
-    except KeyError:
-        # If access fails due to eviction, we will fail over and can ensure that
-        # data is inserted.
-        data = _galaxy_list_groups(wa, gx_user, *args, **kwargs)
-        cache[cacheKey] = data
-        return data
+    data = _galaxy_list_groups(wa, gx_user, *args, **kwargs)
+    return data
 
 
 def _galaxy_list_groups(wa, gx_user, *args, **kwargs):
@@ -1615,19 +1594,8 @@ def galaxy_list_orgs(trans, *args, **kwargs):
     except UnknownUserException:
         return []
 
-    # Key for cached data
-    cacheKey = 'orgs-' + email
-    if cacheKey not in cache:
-        data = _galaxy_list_orgs(wa, gx_user, *args, **kwargs)
-        cache[cacheKey] = data
-        return data
-    try:
-        data = cache[cacheKey]
-        return data
-    except KeyError:
-        data = _galaxy_list_orgs(wa, gx_user, *args, **kwargs)
-        cache[cacheKey] = data
-        return data
+    data = _galaxy_list_orgs(wa, gx_user, *args, **kwargs)
+    return data
 
 
 def _galaxy_list_orgs(wa, gx_user, *args, **kwargs):
