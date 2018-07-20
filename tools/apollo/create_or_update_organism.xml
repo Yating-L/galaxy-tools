@@ -63,8 +63,8 @@ $__user_email__
   <inputs>
     <param name="jbrowse" type="data" format="html" label="JBrowse HTML Output" />
     <expand macro="org_or_guess" />
-    <param name="genus" type="text" label="Genus" optional="False" />
-    <param name="species" type="text" label="Species" optional="True" />
+    <param name="genus" type="text" label="Genus" />
+    <param name="species" type="text" label="Species" />
     <param name="public" type="boolean" truevalue="--public" falsevalue="" label="Is Organism Public" />
     <repeat name="grant_permission" title="Group" label="Grant permission to a user group">
         <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Grant access to a user group" optional="True" />

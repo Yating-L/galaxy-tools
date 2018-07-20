@@ -137,9 +137,14 @@ with open(file_path, 'w') as f:
                                         <add value="@-=_.()/+*^,:?!"/>
                                     </valid>
                                 </sanitizer>
+                                <validator type="empty_field" />
                             </param>
-                            <param name="firstname" type="text" label="First name" />
-                            <param name="lastname" type="text" label="Last name" />
+                            <param name="firstname" type="text" label="First name">
+                                <validator type="empty_field" />
+                            </param>
+                            <param name="lastname" type="text" label="Last name">
+                                <validator type="empty_field" />
+                            </param>
                             <param name="role" type="select" label="Role">
                                 <option value="user" selected="true">user</option>
                                 <option value="instructor" selected="true">instructor (only a system administrator can create an instructor account)</option>
@@ -156,7 +161,9 @@ with open(file_path, 'w') as f:
                             <option value="default">Set an initial password for all new user accounts</option>
                         </param>
                         <when value="default">
-                            <param name="initial_password" type="text" label="Initial password" />
+                            <param name="initial_password" type="text" label="Initial password">
+                                <validator type="empty_field" />
+                            </param>
                         </when>
                         <when value="random"></when>
                     </conditional>
@@ -174,6 +181,7 @@ with open(file_path, 'w') as f:
                                         <add value="@-=_.()/+*^,:?!"/>
                                     </valid>
                                 </sanitizer>
+                                <validator type="empty_field" />
                             </param>
                         </when>
                         <when value="true">
@@ -189,6 +197,7 @@ with open(file_path, 'w') as f:
                         </param>
                         <when value="false">
                             <param name="group" type="text" label="Group name" help="Specify the user group name">
+                                <validator type="empty_field" />
                             </param>
                         </when>
                         <when value="true">
@@ -203,7 +212,7 @@ with open(file_path, 'w') as f:
                             <option value="true">Multiple user groups</option>
                         </param>
                         <when value="false">
-                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Delete the selected user group" optional="True" />
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Delete the selected user group" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />
@@ -223,8 +232,9 @@ with open(file_path, 'w') as f:
                                         <add value="@-=_.()/+*^,:?!"/>
                                     </valid>
                                 </sanitizer>
+                                <validator type="empty_field" />
                             </param>
-                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" optional="True" />
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />
@@ -244,8 +254,9 @@ with open(file_path, 'w') as f:
                                         <add value="@-=_.()/+*^,:?!"/>
                                     </valid>
                                 </sanitizer>
+                                <validator type="empty_field" />
                             </param>
-                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" optional="True" />
+                            <param name="group" type="select" dynamic_options="galaxy_list_groups(__trans__)" label="Group name" />
                         </when>
                         <when value="true">
                             <expand macro="upload_text_file" />
